@@ -1,7 +1,7 @@
 # Личный проект «Дела в Порядке»
 
 * Студент: [Eugene Grushin](https://up.htmlacademy.ru/php/12/user/1218963).
-* Наставник: [Ярослав Иванов](https://htmlacademy.ru/profile/id1451525).
+* Наставник: [Павел Гоголинский](https://htmlacademy.ru/profile/id8691).
 
 ---
 
