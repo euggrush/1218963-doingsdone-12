@@ -37,6 +37,49 @@ $show_complete_tasks = rand(0, 1);
                 </div>
             </header>
 
+            <?php
+                $arrayProjects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+                $arrayTasks = [
+                    [
+                        'Задача' => 'Собеседование в IT компании',
+                        'Дата выполнения' => '01.12.2019',
+                        'Категория' => $arrayProjects[2],
+                        'Выполнен' => false
+                    ],
+                    [
+                        'Задача' => 'Выполнить тестовое задание',
+                        'Дата выполнения' => '25.12.2019',
+                        'Категория' => $arrayProjects[2],
+                        'Выполнен' => false
+                    ],
+                    [
+                        'Задача' => 'Сделать задание первого раздела',
+                        'Дата выполнения' => '21.12.2019',
+                        'Категория' => $arrayProjects[1],
+                        'Выполнен' => true
+                    ],
+                    [
+                        'Задача' => 'Встреча с другом',
+                        'Дата выполнения' => '22.12.2019',
+                        'Категория' => $arrayProjects[0],
+                        'Выполнен' => false
+                    ],
+                    [
+                        'Задача' => 'Купить корм для кота',
+                        'Дата выполнения' => null,
+                        'Категория' => $arrayProjects[3],
+                        'Выполнен' => false
+                    ],
+                    [
+                        'Задача' => 'Заказать пиццу',
+                        'Дата выполнения' => null,
+                        'Категория' => $arrayProjects[3],
+                        'Выполнен' => false
+                    ],
+                ];
+
+                ?>
+
             <div class="content">
                 <section class="content__side">
                     <h2 class="content__side-heading">Проекты</h2>
@@ -55,6 +98,7 @@ $show_complete_tasks = rand(0, 1);
                 </section>
 
                 <main class="content__main">
+
                     <h2 class="content__main-heading">Список задач</h2>
 
                     <form class="search-form" action="index.php" method="post" autocomplete="off">
