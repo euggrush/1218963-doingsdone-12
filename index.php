@@ -169,15 +169,13 @@ $show_complete_tasks = rand(0, 1);
                     </div>
 
                     <table class="tasks">
-                        <?php foreach ($arrayTasks as $task):?>
-                        <?php
+                        <?php foreach ($arrayTasks as $task):
+
                         if ($show_complete_tasks === 0 && $task['isDone']) {
                             continue;
                         }?>
 
-                        <tr class="tasks__item task <?php if ($task['isDone']):?>
-                            task--completed
-                        <?php endif?>">
+                        <tr class="tasks__item task <?= $task['isDone'] ?  "task--completed" : "" ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden" type="checkbox"
