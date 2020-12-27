@@ -101,22 +101,22 @@ $show_complete_tasks = rand(0, 1);
                     ],
                 ];
 
-                // function getTasksCount ($tasksList, $projectName) {
-                //     $i = 0;
+                function getTasksCount ($tasksList, $projectName) {
+                    $i = 0;
 
-                //     while ($i < count($tasksList)) {
+                    while ($i < count($tasksList)) {
 
-                //         if ($tasksList[$i]['Категория'] === $projectName) {
-                //         $n = $i;
-
-
-                //         }
-                //         $i = $i + 1;
-                //     }
+                        if ($tasksList[$i]['Категория'] === $projectName) {
+                        $n = $i;
 
 
-                //     return $n;
-                // }
+                        }
+                        $i = $i + 1;
+                    }
+
+
+                    return $n;
+                }
 
                 ?>
 
@@ -130,8 +130,7 @@ $show_complete_tasks = rand(0, 1);
 
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#"><?=$project['name']?></a>
-                                <span
-                                    class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">0</span>
                             </li>
                             <?php endforeach; ?>
                         </ul>
