@@ -38,45 +38,85 @@ $show_complete_tasks = rand(0, 1);
             </header>
 
             <?php
-                $arrayProjects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+                $arrayProjects = [
+                    ['id' => 1,
+                    'name' => "Входящие"],
+                    ['id' => 2,
+                    'name' => "Учеба"],
+                    ['id' => 3,
+                    'name' => "Работа"],
+                    ['id' => 4,
+                    'name' => "Домашние дела"],
+                    ['id' => 5,
+                    'name' => "Авто"]
+                ];
+
+                $idNameProjects = array_combine(
+                    array_column($arrayProjects, 'id'),
+                    array_column($arrayProjects, 'name')
+                    );
+
                 $arrayTasks = [
                     [
-                        'Задача' => 'Собеседование в IT компании',
-                        'Дата выполнения' => '01.12.2019',
-                        'Категория' => $arrayProjects[2],
-                        'Выполнен' => false
+                        'id' => 1,
+                        'name' => 'Собеседование в IT компании',
+                        'date' => '01.12.2019',
+                        'category' => 3,
+                        'isDone' => false
                     ],
                     [
-                        'Задача' => 'Выполнить тестовое задание',
-                        'Дата выполнения' => '25.12.2019',
-                        'Категория' => $arrayProjects[2],
-                        'Выполнен' => false
+                        'id' => 2,
+                        'name' => 'Выполнить тестовое задание',
+                        'date' => '25.12.2019',
+                        'category' => 3,
+                        'isDone' => false
                     ],
                     [
-                        'Задача' => 'Сделать задание первого раздела',
-                        'Дата выполнения' => '21.12.2019',
-                        'Категория' => $arrayProjects[1],
-                        'Выполнен' => true
+                        'id' => 3,
+                        'name' => 'Сделать задание первого раздела',
+                        'date' => '21.12.2019',
+                        'category' => 2,
+                        'isDone' => true
                     ],
                     [
-                        'Задача' => 'Встреча с другом',
-                        'Дата выполнения' => '22.12.2019',
-                        'Категория' => $arrayProjects[0],
-                        'Выполнен' => false
+                        'id' => 4,
+                        'name' => 'Встреча с другом',
+                        'date' => '22.12.2019',
+                        'category' => 1,
+                        'isDone' => false
                     ],
                     [
-                        'Задача' => 'Купить корм для кота',
-                        'Дата выполнения' => null,
-                        'Категория' => $arrayProjects[3],
-                        'Выполнен' => false
+                        'id' => 5,
+                        'name' => 'Купить корм для кота',
+                        'date' => null,
+                        'category' => 4,
+                        'isDone' => false
                     ],
                     [
-                        'Задача' => 'Заказать пиццу',
-                        'Дата выполнения' => null,
-                        'Категория' => $arrayProjects[3],
-                        'Выполнен' => false
+                        'id' => 6,
+                        'name' => 'Заказать пиццу',
+                        'date' => null,
+                        'category' => 4,
+                        'isDone' => false
                     ],
                 ];
+
+                // function getTasksCount ($tasksList, $projectName) {
+                //     $i = 0;
+
+                //     while ($i < count($tasksList)) {
+
+                //         if ($tasksList[$i]['Категория'] === $projectName) {
+                //         $n = $i;
+
+
+                //         }
+                //         $i = $i + 1;
+                //     }
+
+
+                //     return $n;
+                // }
 
                 ?>
 
@@ -86,10 +126,12 @@ $show_complete_tasks = rand(0, 1);
 
                     <nav class="main-navigation">
                         <ul class="main-navigation__list">
-                            <?php foreach ($arrayProjects as $value):?>
+                            <?php foreach ($arrayProjects as $project):?>
+
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#"><?=$value?></a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <a class="main-navigation__list-item-link" href="#"><?=$project['name']?></a>
+                                <span
+                                    class="main-navigation__list-item-count">0</span>
                             </li>
                             <?php endforeach; ?>
                         </ul>
@@ -127,23 +169,23 @@ $show_complete_tasks = rand(0, 1);
                     </div>
 
                     <table class="tasks">
-                        <?php foreach ($arrayTasks as $key => $value):?>
+                        <?php foreach ($arrayTasks as $task):?>
                         <?php
-                        if ($show_complete_tasks === 0 && $value['Выполнен']) {
+                        if ($show_complete_tasks === 0 && $task['isDone']) {
                             continue;
                         }?>
 
-                        <tr class="tasks__item task <?php if ($value['Выполнен']):?>
+                        <tr class="tasks__item task <?php if ($task['isDone']):?>
                             task--completed
                         <?php endif?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input class="checkbox__input visually-hidden" type="checkbox"
-                                        <?php if ($value['Выполнен']):?> checked <?php endif?>>
-                                    <span class="checkbox__text"><?=$value['Задача']?></span>
+                                        <?php if ($task['isDone']):?> checked <?php endif?>>
+                                    <span class="checkbox__text"><?=$task['name']?></span>
                                 </label>
                             </td>
-                            <td class="task__date"><?=$value['Дата выполнения']?></td>
+                            <td class="task__date"><?=$task['date']?></td>
                             <td class="task__controls"></td>
                         </tr>
 
