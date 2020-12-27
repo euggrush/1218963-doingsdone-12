@@ -37,16 +37,103 @@ $show_complete_tasks = rand(0, 1);
                 </div>
             </header>
 
+            <?php
+                $arrayProjects = [
+                    ['id' => 1,
+                    'name' => "Входящие"],
+                    ['id' => 2,
+                    'name' => "Учеба"],
+                    ['id' => 3,
+                    'name' => "Работа"],
+                    ['id' => 4,
+                    'name' => "Домашние дела"],
+                    ['id' => 5,
+                    'name' => "Авто"]
+                ];
+
+                $idNameProjects = array_combine(
+                    array_column($arrayProjects, 'id'),
+                    array_column($arrayProjects, 'name')
+                    );
+
+                $arrayTasks = [
+                    [
+                        'id' => 1,
+                        'name' => 'Собеседование в IT компании',
+                        'date' => '01.12.2019',
+                        'category' => 3,
+                        'isDone' => false
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Выполнить тестовое задание',
+                        'date' => '25.12.2019',
+                        'category' => 3,
+                        'isDone' => false
+                    ],
+                    [
+                        'id' => 3,
+                        'name' => 'Сделать задание первого раздела',
+                        'date' => '21.12.2019',
+                        'category' => 2,
+                        'isDone' => true
+                    ],
+                    [
+                        'id' => 4,
+                        'name' => 'Встреча с другом',
+                        'date' => '22.12.2019',
+                        'category' => 1,
+                        'isDone' => false
+                    ],
+                    [
+                        'id' => 5,
+                        'name' => 'Купить корм для кота',
+                        'date' => null,
+                        'category' => 4,
+                        'isDone' => false
+                    ],
+                    [
+                        'id' => 6,
+                        'name' => 'Заказать пиццу',
+                        'date' => null,
+                        'category' => 4,
+                        'isDone' => false
+                    ],
+                ];
+
+                // function getTasksCount ($tasksList, $projectName) {
+                //     $i = 0;
+
+                //     while ($i < count($tasksList)) {
+
+                //         if ($tasksList[$i]['Категория'] === $projectName) {
+                //         $n = $i;
+
+
+                //         }
+                //         $i = $i + 1;
+                //     }
+
+
+                //     return $n;
+                // }
+
+                ?>
+
             <div class="content">
                 <section class="content__side">
                     <h2 class="content__side-heading">Проекты</h2>
 
                     <nav class="main-navigation">
                         <ul class="main-navigation__list">
+                            <?php foreach ($arrayProjects as $project):?>
+
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#">Название проекта</a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <a class="main-navigation__list-item-link" href="#"><?=$project['name']?></a>
+                                <span
+                                    class="main-navigation__list-item-count">0</span>
                             </li>
+                            <?php endforeach; ?>
                         </ul>
                     </nav>
 
@@ -55,6 +142,7 @@ $show_complete_tasks = rand(0, 1);
                 </section>
 
                 <main class="content__main">
+
                     <h2 class="content__main-heading">Список задач</h2>
 
                     <form class="search-form" action="index.php" method="post" autocomplete="off">
@@ -81,35 +169,25 @@ $show_complete_tasks = rand(0, 1);
                     </div>
 
                     <table class="tasks">
-                        <tr class="tasks__item task">
+                        <?php foreach ($arrayTasks as $task):
+
+                        if ($show_complete_tasks === 0 && $task['isDone']) {
+                            continue;
+                        }?>
+
+                        <tr class="tasks__item task <?= $task['isDone'] ?  "task--completed" : "" ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox"
-                                        value="1">
-                                    <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
+                                    <input class="checkbox__input visually-hidden" type="checkbox"
+                                        <?php if ($task['isDone']):?> checked <?php endif?>>
+                                    <span class="checkbox__text"><?=$task['name']?></span>
                                 </label>
                             </td>
-
-                            <td class="task__file">
-                                <a class="download-link" href="#">Home.psd</a>
-                            </td>
-
-                            <td class="task__date"></td>
-                        </tr>
-                        <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
-
-                        <?php if ($show_complete_tasks === 1):?>
-                        <tr class="tasks__item task task--completed">
-                            <td class="task__select">
-                                <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                                    <span class="checkbox__text">Записаться на интенсив "Базовый PHP"</span>
-                                </label>
-                            </td>
-                            <td class="task__date">10.10.2019</td>
+                            <td class="task__date"><?=$task['date']?></td>
                             <td class="task__controls"></td>
                         </tr>
-                        <?php endif?>
+
+                        <?php endforeach; ?>
 
                     </table>
                 </main>
