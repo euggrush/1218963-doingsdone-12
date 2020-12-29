@@ -101,21 +101,18 @@ $show_complete_tasks = rand(0, 1);
                     ],
                 ];
 
-                function getTasksCount ($tasksList, $projectName) {
-                    $i = 0;
 
-                    while ($i < count($tasksList)) {
+                function getTasksCount($projectList, $projectName) {
 
-                        if ($tasksList[$i]['Категория'] === $projectName) {
-                        $n = $i;
+                    foreach ($projectList as $project) {
 
-
-                        }
-                        $i = $i + 1;
+                        $filteredArray = array_filter($projectList, function($a) {
+                            if ($idNameProjects[$project['category']] === $projectName) {
+                                return true;
+                            }
+                        });
                     }
-
-
-                    return $n;
+                    return count($filteredArray);
                 }
 
                 ?>
@@ -130,7 +127,9 @@ $show_complete_tasks = rand(0, 1);
 
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#"><?=$project['name']?></a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">
+                                    <?=getTasksCount($arrayTasks, $project['name'])?>
+                                </span>
                             </li>
                             <?php endforeach; ?>
                         </ul>
