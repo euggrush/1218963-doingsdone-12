@@ -1,4 +1,7 @@
 <?php
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 ?>
@@ -101,22 +104,18 @@ $show_complete_tasks = rand(0, 1);
                     ],
                 ];
 
-                // function getTasksCount ($tasksList, $projectName) {
-                //     $i = 0;
-
-                //     while ($i < count($tasksList)) {
-
-                //         if ($tasksList[$i]['Категория'] === $projectName) {
-                //         $n = $i;
 
 
-                //         }
-                //         $i = $i + 1;
-                //     }
-
-
-                //     return $n;
-                // }
+                function getTasksCount($projectList, $projectName) {
+                    $i = 0;
+                    foreach ($projectList as $project) {
+                        global $idNameProjects;
+                        if ($idNameProjects[$project['category']] === $projectName) {
+                            $i++;
+                        }
+                    }
+                    return $i;
+                }
 
                 ?>
 
@@ -130,8 +129,9 @@ $show_complete_tasks = rand(0, 1);
 
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#"><?=$project['name']?></a>
-                                <span
-                                    class="main-navigation__list-item-count">0</span>
+                                <span class="main-navigation__list-item-count">
+                                    <?=getTasksCount($arrayTasks, $project['name'])?>
+                                </span>
                             </li>
                             <?php endforeach; ?>
                         </ul>
