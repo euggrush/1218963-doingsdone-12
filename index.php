@@ -2,6 +2,7 @@
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
+require('helpers.php');
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
@@ -79,17 +80,22 @@ function getTasksCount($projectList, $projectName) {
     return $i;
 }
 
-$allDataArray = [
-    "show_complete_tasks" => $show_complete_tasks,
-    "title" => "Дела в порядке",
-    "userName" => "Константин",
+$mainContent = include_template('main.php',
+[
     "arrayProjects" => $arrayProjects,
     "idNameProjects" => $idNameProjects,
-    "arrayTasks" => $arrayTasks
-];
+    "arrayTasks" => $arrayTasks,
+    "show_complete_tasks" => $show_complete_tasks
+]);
 
-require('helpers.php');
-include_template('main.php', $allDataArray);
-print(include_template('layout.php', $allDataArray));
+$layoutContent = include_template('layout.php',
+[
+    "mainContent" => $mainContent,
+    "title" => "Дела в порядке",
+    "userName" => "Константин"
+]
+);
+
+print($layoutContent);
 
 ?>

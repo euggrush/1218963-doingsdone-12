@@ -36,7 +36,7 @@
             </header>
 
             <div class="content">
-                <?=require('main.php')?>
+                <?= $mainContent; ?>
 
             </div>
 
