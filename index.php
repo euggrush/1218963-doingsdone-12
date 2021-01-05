@@ -83,7 +83,6 @@ function getTasksCount($projectList, $projectName) {
 $mainContent = include_template('main.php',
 [
     "arrayProjects" => $arrayProjects,
-    "idNameProjects" => $idNameProjects,
     "arrayTasks" => $arrayTasks,
     "show_complete_tasks" => $show_complete_tasks
 ]);
