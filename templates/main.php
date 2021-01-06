@@ -53,7 +53,7 @@
                             continue;
                         }?>
 
-        <tr class="tasks__item task <?= $task['isDone'] ?  "task--completed" : "" ?>">
+        <tr class="tasks__item task <?= getImportantTask($task['date']) ? "task--important" : "" ?> <?= $task['isDone'] ?  "task--completed" : "" ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($task['isDone']):?> checked

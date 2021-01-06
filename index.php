@@ -28,28 +28,28 @@ $arrayTasks = [
     [
         'id' => 1,
         'name' => 'Собеседование в IT компании',
-        'date' => '01.12.2019',
+        'date' => '07.01.2021',
         'category' => 3,
         'isDone' => false
     ],
     [
         'id' => 2,
         'name' => 'Выполнить тестовое задание',
-        'date' => '25.12.2019',
+        'date' => '07.01.2021',
         'category' => 3,
         'isDone' => false
     ],
     [
         'id' => 3,
         'name' => 'Сделать задание первого раздела',
-        'date' => '21.12.2019',
+        'date' => '12.01.2021',
         'category' => 2,
         'isDone' => true
     ],
     [
         'id' => 4,
         'name' => 'Встреча с другом',
-        'date' => '22.12.2019',
+        'date' => '02.02.2021',
         'category' => 1,
         'isDone' => false
     ],
@@ -78,6 +78,15 @@ function getTasksCount($projectList, $projectName) {
         }
     }
     return $i;
+}
+
+function getImportantTask($date) {
+    $currentTime = time();
+    $dueTimeinHours = floor((strtotime($date) - $currentTime) / 3600);
+    if ($dueTimeinHours > 24 || strtotime($date) == null) {
+        return false;
+    }
+    return true;
 }
 
 $mainContent = include_template('main.php',
