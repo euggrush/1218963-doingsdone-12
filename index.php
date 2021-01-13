@@ -91,7 +91,13 @@ function getImportantTask($date) {
 
 function getFilterArray($array) {
     foreach ($array as $item) {
-        htmlspecialchars($item['name']);
+        foreach ($item as $key => $value) {
+            switch (gettype($value)) {
+                case 'string':
+                $item[$key] = htmlspecialchars($value);
+                break;
+            }
+        }
     }
     return $array;
 }
