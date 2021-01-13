@@ -89,10 +89,17 @@ function getImportantTask($date) {
     return true;
 }
 
+function getFilterArray($array) {
+    foreach ($array as $item) {
+        htmlspecialchars($item['name']);
+    }
+    return $array;
+}
+
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => $arrayProjects,
-    "arrayTasks" => $arrayTasks,
+    "arrayProjects" => getFilterArray($arrayProjects),
+    "arrayTasks" => getFilterArray($arrayTasks),
     "show_complete_tasks" => $show_complete_tasks
 ]);
 

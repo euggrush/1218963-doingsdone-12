@@ -6,7 +6,7 @@
             <?php foreach ($arrayProjects as $project):?>
 
             <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= strip_tags($project['name']); ?></a>
+                <a class="main-navigation__list-item-link" href="#"><?= $project['name']; ?></a>
                 <span class="main-navigation__list-item-count">
                     <?=getTasksCount($arrayTasks, $project['name'])?>
                 </span>
@@ -58,10 +58,10 @@
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($task['isDone']):?> checked
                         <?php endif?>>
-                    <span class="checkbox__text"><?= strip_tags($task['name']); ?></span>
+                    <span class="checkbox__text"><?= $task['name']; ?></span>
                 </label>
             </td>
-            <td class="task__date"><?= strip_tags($task['date']); ?></td>
+            <td class="task__date"><?= $task['date']; ?></td>
             <td class="task__controls"></td>
         </tr>
 
