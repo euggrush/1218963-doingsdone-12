@@ -90,14 +90,15 @@ function getImportantTask($date) {
 }
 
 function getFilterArray($array) {
-    foreach ($array as $item) {
-        foreach ($item as $key => $value) {
+    foreach ($array as $arrayKey => $arrayItem) {
+        foreach ($arrayItem as $itemKey => $value) {
             switch (gettype($value)) {
                 case 'string':
-                $item[$key] = htmlspecialchars($value);
+                $arrayItem[$itemKey] = htmlspecialchars($value);
                 break;
             }
         }
+        $array[$arrayKey] = $arrayItem;
     }
     return $array;
 }
