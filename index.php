@@ -28,28 +28,28 @@ $arrayTasks = [
     [
         'id' => 1,
         'name' => 'Собеседование в IT компании',
-        'date' => '07.01.2021',
+        'date' => '07.02.2021',
         'category' => 3,
         'isDone' => false
     ],
     [
         'id' => 2,
         'name' => 'Выполнить тестовое задание',
-        'date' => '07.01.2021',
+        'date' => '15.01.2021',
         'category' => 3,
         'isDone' => false
     ],
     [
         'id' => 3,
         'name' => 'Сделать задание первого раздела',
-        'date' => '12.01.2021',
+        'date' => '12.02.2021',
         'category' => 2,
         'isDone' => true
     ],
     [
         'id' => 4,
         'name' => 'Встреча с другом',
-        'date' => '02.02.2021',
+        'date' => '14.01.2021',
         'category' => 1,
         'isDone' => false
     ],
@@ -91,10 +91,17 @@ function getImportantTask($date) {
 
 function getFilterArray($array) {
     foreach ($array as $arrayKey => $arrayItem) {
-        foreach ($arrayItem as $itemKey => $value) {
-            switch (gettype($value)) {
+
+        if (array_key_exists('date', $arrayItem)) {
+            if (getImportantTask($arrayItem['date'])) {
+                $arrayItem['flag'] = 'task--important';
+            }
+        }
+
+        foreach ($arrayItem as $itemKey => $ItemValue) {
+            switch (gettype($ItemValue)) {
                 case 'string':
-                $arrayItem[$itemKey] = htmlspecialchars($value);
+                $arrayItem[$itemKey] = htmlspecialchars($ItemValue);
                 break;
             }
         }
