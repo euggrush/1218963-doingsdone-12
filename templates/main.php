@@ -8,7 +8,7 @@
             <li class="main-navigation__list-item">
                 <a class="main-navigation__list-item-link" href="#"><?= $project['name']; ?></a>
                 <span class="main-navigation__list-item-count">
-                    <?=getTasksCount($arrayTasks, $project['name'])?>
+                    <?= $project['count']; ?>
                 </span>
             </li>
             <?php endforeach; ?>
