@@ -93,12 +93,19 @@ function getFilterArray($array) {
 
     foreach ($array as $arrayKey => $arrayItem) {
         global $arrayTasks;
-        if (array_key_exists('date', $arrayItem)) {
-            if (getImportantTask($arrayItem['date'])) {
-                $arrayItem['flag'] = 'task--important';
-            }
-        } else {
-            $arrayItem['count'] = getTasksCount($arrayTasks ,$arrayItem['name']);
+        switch (array_key_exists('date', $arrayItem)) {
+
+            case true:
+                switch (getImportantTask($arrayItem['date'])) {
+                    case true:
+                        $arrayItem['flag'] = 'task--important';
+                        break;
+                }
+                break;
+
+            case false:
+                $arrayItem['count'] = getTasksCount($arrayTasks ,$arrayItem['name']);
+                break;
         }
 
         foreach ($arrayItem as $itemKey => $ItemValue) {
