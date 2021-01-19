@@ -69,6 +69,21 @@ $arrayTasks = [
     ],
 ];
 
+function getFilterArray(array $array) {
+
+    foreach ($array as $arrayKey => $arrayItem) {
+        foreach ($arrayItem as $itemKey => $ItemValue) {
+            switch (gettype($ItemValue)) {
+                case 'string':
+                $arrayItem[$itemKey] = htmlspecialchars($ItemValue);
+                break;
+            }
+        }
+        $array[$arrayKey] = $arrayItem;
+    }
+    return $array;
+}
+
 function getTasksCount($projectList, $projectName) {
     $i = 0;
     foreach ($projectList as $project) {
@@ -89,32 +104,14 @@ function getImportantTask($date) {
     return true;
 }
 
-function getFilterArray($array) {
-
+function getUpdateArray(array $array) {
     foreach ($array as $arrayKey => $arrayItem) {
+
+        if (array_key_exists('date', $arrayItem)) {
+            (getImportantTask($arrayItem['date'])) ? $arrayItem['flag'] = 'task--important' : '';
+        }
         global $arrayTasks;
-        switch (array_key_exists('date', $arrayItem)) {
-
-            case true:
-                switch (getImportantTask($arrayItem['date'])) {
-                    case true:
-                        $arrayItem['flag'] = 'task--important';
-                        break;
-                }
-                break;
-
-            case false:
-                $arrayItem['count'] = getTasksCount($arrayTasks ,$arrayItem['name']);
-                break;
-        }
-
-        foreach ($arrayItem as $itemKey => $ItemValue) {
-            switch (gettype($ItemValue)) {
-                case 'string':
-                $arrayItem[$itemKey] = htmlspecialchars($ItemValue);
-                break;
-            }
-        }
+        $arrayItem['count'] = getTasksCount($arrayTasks ,$arrayItem['name']);
         $array[$arrayKey] = $arrayItem;
     }
     return $array;
@@ -122,8 +119,8 @@ function getFilterArray($array) {
 
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => getFilterArray($arrayProjects),
-    "arrayTasks" => getFilterArray($arrayTasks),
+    "arrayProjects" => getFilterArray(getUpdateArray($arrayProjects)),
+    "arrayTasks" => getFilterArray(getUpdateArray($arrayTasks)),
     "show_complete_tasks" => $show_complete_tasks
 ]);
 
