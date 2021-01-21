@@ -84,18 +84,18 @@ function getFilterArray(array $array) {
     return $array;
 }
 
-function getTasksCount($projectList, $projectName) {
+function getTasksCount($projectList, $projectName, $categoryName) {
     $i = 0;
     foreach ($projectList as $project) {
         global $idNameProjects;
-        if ($idNameProjects[$project['category']] === $projectName) {
+        if ($categoryName[$project['category']] === $projectName) {
             $i++;
         }
     }
     return $i;
 }
 
-function getImportantTask($date) {
+function isTaskImportant($date) {
     $currentTime = time();
     $dueTimeinHours = floor((strtotime($date) - $currentTime) / 3600);
     if ($dueTimeinHours > 24 || strtotime($date) == null) {
@@ -104,23 +104,26 @@ function getImportantTask($date) {
     return true;
 }
 
-function getUpdateArray(array $array) {
+function getUpdateArray(& $array, & $tasksList, & $taskNameAndCategory) {
     foreach ($array as $arrayKey => $arrayItem) {
 
         if (array_key_exists('date', $arrayItem)) {
-            (getImportantTask($arrayItem['date'])) ? $arrayItem['flag'] = 'task--important' : '';
+            (isTaskImportant($arrayItem['date'])) ? $arrayItem['flagImportant'] = true : $arrayItem['flagImportant'] = false;
         }
-        global $arrayTasks;
-        $arrayItem['count'] = getTasksCount($arrayTasks ,$arrayItem['name']);
+
+        $arrayItem['count'] = getTasksCount($tasksList ,$arrayItem['name'], $taskNameAndCategory);
         $array[$arrayKey] = $arrayItem;
     }
     return $array;
 }
 
+getUpdateArray($arrayProjects, $arrayTasks, $idNameProjects);
+getUpdateArray($arrayTasks, $arrayTasks, $idNameProjects);
+
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => getFilterArray(getUpdateArray($arrayProjects)),
-    "arrayTasks" => getFilterArray(getUpdateArray($arrayTasks)),
+    "arrayProjects" => getFilterArray($arrayProjects),
+    "arrayTasks" => getFilterArray($arrayTasks),
     "show_complete_tasks" => $show_complete_tasks
 ]);
 
