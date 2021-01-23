@@ -19,11 +19,6 @@ $arrayProjects = [
     'name' => "Авто"]
 ];
 
-$idNameProjects = array_combine(
-    array_column($arrayProjects, 'id'),
-    array_column($arrayProjects, 'name')
-    );
-
 $arrayTasks = [
     [
         'id' => 1,
@@ -84,11 +79,18 @@ function getFilterArray(array $array) {
     return $array;
 }
 
-function getTasksCount($projectList, $projectName, $categoryName) {
+function getTasksCount(array $projectList, array $tasksList, $projectName) {
+
+    $idNameProjects = array_combine(
+        array_column($projectList, 'id'),
+        array_column($projectList, 'name')
+        );
+
     $i = 0;
-    foreach ($projectList as $project) {
-        global $idNameProjects;
-        if ($categoryName[$project['category']] === $projectName) {
+
+    foreach ($tasksList as $task) {
+
+        if ($idNameProjects[$task['category']] === $projectName) {
             $i++;
         }
     }
@@ -104,26 +106,27 @@ function isTaskImportant($date) {
     return true;
 }
 
-function getUpdateArray(& $array, & $tasksList, & $taskNameAndCategory) {
+function getUpdateArray(array & $array, array & $tasksList) : void {
     foreach ($array as $arrayKey => $arrayItem) {
 
         if (array_key_exists('date', $arrayItem)) {
             (isTaskImportant($arrayItem['date'])) ? $arrayItem['flagImportant'] = true : $arrayItem['flagImportant'] = false;
         }
 
-        $arrayItem['count'] = getTasksCount($tasksList ,$arrayItem['name'], $taskNameAndCategory);
+        $arrayItem['count'] = getTasksCount($array, $tasksList, $arrayItem['name']);
         $array[$arrayKey] = $arrayItem;
     }
-    return $array;
 }
 
-getUpdateArray($arrayProjects, $arrayTasks, $idNameProjects);
-getUpdateArray($arrayTasks, $arrayTasks, $idNameProjects);
+getUpdateArray($arrayProjects, $arrayTasks);
+getUpdateArray($arrayTasks, $arrayTasks);
+getFilterArray($arrayProjects);
+getFilterArray($arrayTasks);
 
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => getFilterArray($arrayProjects),
-    "arrayTasks" => getFilterArray($arrayTasks),
+    "arrayProjects" => $arrayProjects,
+    "arrayTasks" => $arrayTasks,
     "show_complete_tasks" => $show_complete_tasks
 ]);
 
