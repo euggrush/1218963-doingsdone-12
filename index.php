@@ -64,9 +64,9 @@ $arrayTasks = [
     ],
 ];
 
-function getFilterArray(array $array) {
+function getFilterArray(array $arrayToFilter) {
 
-    foreach ($array as $arrayKey => $arrayItem) {
+    foreach ($arrayToFilter as $arrayKey => $arrayItem) {
         foreach ($arrayItem as $itemKey => $ItemValue) {
             switch (gettype($ItemValue)) {
                 case 'string':
@@ -74,9 +74,9 @@ function getFilterArray(array $array) {
                 break;
             }
         }
-        $array[$arrayKey] = $arrayItem;
+        $arrayToFilter[$arrayKey] = $arrayItem;
     }
-    return $array;
+    return $arrayToFilter;
 }
 
 function getTasksCount(array $projectList, array $tasksList, $projectName) {
@@ -86,16 +86,15 @@ function getTasksCount(array $projectList, array $tasksList, $projectName) {
         array_column($projectList, 'name')
         );
 
-    $i = 0;
+    $taskCounter = 0;
 
     foreach ($tasksList as $taskKey => $task) {
 
-        if ($idNameProjects[$tasksList[$taskKey]['category']] === $projectName) {
-            $i++;
+        if ($idNameProjects[$task['category']] === $projectName) {
+            $taskCounter++;
         }
-
     }
-    return $i;
+    return $taskCounter;
 }
 
 function isTaskImportant($date) {
@@ -107,19 +106,21 @@ function isTaskImportant($date) {
     return true;
 }
 
-function getUpdateArray(array &$projectList, array &$tasksList) : void {
+function getUpdatedArray(array $projectList, array $tasksList) {
 
-    foreach ($tasksList as $taskKey => $taskItem) {
-    (isTaskImportant($taskItem['date'])) ? $tasksList[$taskKey]['flagImportant'] = true : $tasksList[$taskKey]['flagImportant'] = false;
+    foreach ($tasksList as $taskKey => $currentTask) {
+        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['date']);
     }
 
-    foreach ($projectList as $projectKey => $projectEntry) {
-        //var_dump($projectEntry['name']);
-        $projectList[$projectKey]['count'] = getTasksCount($projectList, $tasksList, $projectEntry['name']);
+    foreach ($projectList as $projectKey => $currentProject) {
+        $projectList[$projectKey]['count'] = getTasksCount($projectList, $tasksList, $currentProject['name']);
     }
+
+    return [$projectList, $tasksList];
 }
 
-getUpdateArray($arrayProjects, $arrayTasks);
+list($arrayProjects, $arrayTasks) = getUpdatedArray($arrayProjects, $arrayTasks);
+getUpdatedArray($arrayProjects, $arrayTasks);
 getFilterArray($arrayProjects);
 getFilterArray($arrayTasks);
 
