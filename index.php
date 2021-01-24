@@ -19,37 +19,32 @@ $arrayProjects = [
     'name' => "Авто"]
 ];
 
-$idNameProjects = array_combine(
-    array_column($arrayProjects, 'id'),
-    array_column($arrayProjects, 'name')
-    );
-
 $arrayTasks = [
     [
         'id' => 1,
         'name' => 'Собеседование в IT компании',
-        'date' => '07.01.2021',
+        'date' => '07.02.2021',
         'category' => 3,
         'isDone' => false
     ],
     [
         'id' => 2,
         'name' => 'Выполнить тестовое задание',
-        'date' => '07.01.2021',
+        'date' => '15.01.2021',
         'category' => 3,
         'isDone' => false
     ],
     [
         'id' => 3,
         'name' => 'Сделать задание первого раздела',
-        'date' => '12.01.2021',
+        'date' => '12.02.2021',
         'category' => 2,
         'isDone' => true
     ],
     [
         'id' => 4,
         'name' => 'Встреча с другом',
-        'date' => '02.02.2021',
+        'date' => '14.01.2021',
         'category' => 1,
         'isDone' => false
     ],
@@ -63,24 +58,46 @@ $arrayTasks = [
     [
         'id' => 6,
         'name' => 'Заказать пиццу',
-        'date' => null,
+        'date' => '24.01.2021',
         'category' => 4,
         'isDone' => false
     ],
 ];
 
-function getTasksCount($projectList, $projectName) {
-    $i = 0;
-    foreach ($projectList as $project) {
-        global $idNameProjects;
-        if ($idNameProjects[$project['category']] === $projectName) {
-            $i++;
+function getFilterArray(array $arrayToFilter) {
+
+    foreach ($arrayToFilter as $arrayKey => $arrayItem) {
+        foreach ($arrayItem as $itemKey => $ItemValue) {
+            switch (gettype($ItemValue)) {
+                case 'string':
+                $arrayItem[$itemKey] = htmlspecialchars($ItemValue);
+                break;
+            }
         }
+        $arrayToFilter[$arrayKey] = $arrayItem;
     }
-    return $i;
+    return $arrayToFilter;
 }
 
-function getImportantTask($date) {
+function getTasksCount(array $projectList, array $tasksList, $projectName) {
+
+    $idNameProjects = array_combine(
+        array_column($projectList, 'id'),
+        array_column($projectList, 'name')
+        );
+
+    $taskCounter = 0;
+
+    foreach ($tasksList as $taskKey => $task) {
+
+        if ($idNameProjects[$task['category']] === $projectName) {
+            $taskCounter++;
+        }
+    }
+    return $taskCounter;
+}
+
+function isTaskImportant($date) {
     $currentTime = time();
     $dueTimeinHours = floor((strtotime($date) - $currentTime) / 3600);
     if ($dueTimeinHours > 24 || strtotime($date) == null) {
@@ -89,17 +106,28 @@ function getImportantTask($date) {
     return true;
 }
 
-function getFilterArray($array) {
-    foreach ($array as $item) {
-        htmlspecialchars($item['name']);
+function getUpdatedArray(array $projectList, array $tasksList) {
+
+    foreach ($tasksList as $taskKey => $currentTask) {
+        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['date']);
     }
-    return $array;
+
+    foreach ($projectList as $projectKey => $currentProject) {
+        $projectList[$projectKey]['count'] = getTasksCount($projectList, $tasksList, $currentProject['name']);
+    }
+
+    return [$projectList, $tasksList];
 }
+
+list($arrayProjects, $arrayTasks) = getUpdatedArray($arrayProjects, $arrayTasks);
+getUpdatedArray($arrayProjects, $arrayTasks);
+getFilterArray($arrayProjects);
+getFilterArray($arrayTasks);
 
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => getFilterArray($arrayProjects),
-    "arrayTasks" => getFilterArray($arrayTasks),
+    "arrayProjects" => $arrayProjects,
+    "arrayTasks" => $arrayTasks,
     "show_complete_tasks" => $show_complete_tasks
 ]);
 

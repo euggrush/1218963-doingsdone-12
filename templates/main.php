@@ -8,7 +8,7 @@
             <li class="main-navigation__list-item">
                 <a class="main-navigation__list-item-link" href="#"><?= $project['name']; ?></a>
                 <span class="main-navigation__list-item-count">
-                    <?=getTasksCount($arrayTasks, $project['name'])?>
+                    <?= $project['count']; ?>
                 </span>
             </li>
             <?php endforeach; ?>
@@ -53,7 +53,7 @@
                             continue;
                         }?>
 
-        <tr class="tasks__item task <?= getImportantTask($task['date']) ? "task--important" : "" ?> <?= $task['isDone'] ?  "task--completed" : "" ?>">
+        <tr class="tasks__item task <?= $task['isImportant'] === true ? "task--important" : ""; ?> <?= $task['isDone'] ?  "task--completed" : "" ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($task['isDone']):?> checked
