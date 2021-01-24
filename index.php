@@ -58,7 +58,7 @@ $arrayTasks = [
     [
         'id' => 6,
         'name' => 'Заказать пиццу',
-        'date' => null,
+        'date' => '24.01.2021',
         'category' => 4,
         'isDone' => false
     ],
@@ -88,11 +88,12 @@ function getTasksCount(array $projectList, array $tasksList, $projectName) {
 
     $i = 0;
 
-    foreach ($tasksList as $task) {
+    foreach ($tasksList as $taskKey => $task) {
 
-        if ($idNameProjects[$task['category']] === $projectName) {
+        if ($idNameProjects[$tasksList[$taskKey]['category']] === $projectName) {
             $i++;
         }
+
     }
     return $i;
 }
@@ -106,20 +107,19 @@ function isTaskImportant($date) {
     return true;
 }
 
-function getUpdateArray(array & $array, array & $tasksList) : void {
-    foreach ($array as $arrayKey => $arrayItem) {
+function getUpdateArray(array &$projectList, array &$tasksList) : void {
 
-        if (array_key_exists('date', $arrayItem)) {
-            (isTaskImportant($arrayItem['date'])) ? $arrayItem['flagImportant'] = true : $arrayItem['flagImportant'] = false;
-        }
+    foreach ($tasksList as $taskKey => $taskItem) {
+    (isTaskImportant($taskItem['date'])) ? $tasksList[$taskKey]['flagImportant'] = true : $tasksList[$taskKey]['flagImportant'] = false;
+    }
 
-        $arrayItem['count'] = getTasksCount($array, $tasksList, $arrayItem['name']);
-        $array[$arrayKey] = $arrayItem;
+    foreach ($projectList as $projectKey => $projectEntry) {
+        //var_dump($projectEntry['name']);
+        $projectList[$projectKey]['count'] = getTasksCount($projectList, $tasksList, $projectEntry['name']);
     }
 }
 
 getUpdateArray($arrayProjects, $arrayTasks);
-getUpdateArray($arrayTasks, $arrayTasks);
 getFilterArray($arrayProjects);
 getFilterArray($arrayTasks);
 
