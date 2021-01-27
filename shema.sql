@@ -6,22 +6,22 @@ USE doingsdone_db;
 
 CREATE TABLE project (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  project_name VARCHAR(128)
+  name VARCHAR(128)
 );
 
 CREATE TABLE task (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  task_status BOOLEAN DEFAULT 0,
-  task_name VARCHAR(128),
-  task_url VARCHAR(128),
-  task_due_dt TIMESTAMP
+  date_create TIMESTAMP,
+  status BOOLEAN DEFAULT 0,
+  name VARCHAR(128),
+  url VARCHAR(128),
+  due_date TIMESTAMP
 );
 
 CREATE TABLE user (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  dt_reg TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  date_registration TIMESTAMP,
   email VARCHAR(128),
-  usr_name VARCHAR(128),
-  user_password CHAR(64)
+  name VARCHAR(128),
+  password_hash CHAR(64)
 );
