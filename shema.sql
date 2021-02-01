@@ -11,11 +11,14 @@ CREATE TABLE project (
 
 CREATE TABLE task (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  project_id INT NOT NULL,
   date_create TIMESTAMP,
   status BOOLEAN DEFAULT 0,
   name VARCHAR(128),
   url VARCHAR(128),
-  due_date TIMESTAMP
+  due_date TIMESTAMP,
+  FOREIGN KEY (project_id)  REFERENCES project (id)
+
 );
 
 CREATE TABLE user (

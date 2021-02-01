@@ -6,18 +6,28 @@ require('helpers.php');
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$arrayProjects = [
-    ['id' => 1,
-    'name' => "Входящие"],
-    ['id' => 2,
-    'name' => "Учеба"],
-    ['id' => 3,
-    'name' => "Работа"],
-    ['id' => 4,
-    'name' => "Домашние дела"],
-    ['id' => 5,
-    'name' => "Авто"]
-];
+$con = mysqli_connect("localhost", "root", "root","doingsdone_db");
+$sqlTasks = "SELECT name FROM task";
+$sqlProjects = "SELECT id, name FROM project";
+
+$resultTasks = mysqli_query($con, $sqlTasks);
+$resultProjects = mysqli_query($con, $sqlProjects);
+
+$arrayProjects = mysqli_fetch_all($resultProjects, MYSQLI_ASSOC);
+$arrTasks = mysqli_fetch_all($resultTasks, MYSQLI_ASSOC);
+
+// $arrayProjects = [
+//     ['id' => 1,
+//     'name' => "Входящие"],
+//     ['id' => 2,
+//     'name' => "Учеба"],
+//     ['id' => 3,
+//     'name' => "Работа"],
+//     ['id' => 4,
+//     'name' => "Домашние дела"],
+//     ['id' => 5,
+//     'name' => "Авто"]
+// ];
 
 $arrayTasks = [
     [
