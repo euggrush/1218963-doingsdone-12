@@ -7,72 +7,14 @@ require('helpers.php');
 $show_complete_tasks = rand(0, 1);
 
 $con = mysqli_connect("localhost", "root", "root","doingsdone_db");
-$sqlTasks = "SELECT name FROM task";
+$sqlTasks = "SELECT id, project_id, status, name, due_date FROM task";
 $sqlProjects = "SELECT id, name FROM project";
 
 $resultTasks = mysqli_query($con, $sqlTasks);
 $resultProjects = mysqli_query($con, $sqlProjects);
 
 $arrayProjects = mysqli_fetch_all($resultProjects, MYSQLI_ASSOC);
-$arrTasks = mysqli_fetch_all($resultTasks, MYSQLI_ASSOC);
-
-// $arrayProjects = [
-//     ['id' => 1,
-//     'name' => "Входящие"],
-//     ['id' => 2,
-//     'name' => "Учеба"],
-//     ['id' => 3,
-//     'name' => "Работа"],
-//     ['id' => 4,
-//     'name' => "Домашние дела"],
-//     ['id' => 5,
-//     'name' => "Авто"]
-// ];
-
-$arrayTasks = [
-    [
-        'id' => 1,
-        'name' => 'Собеседование в IT компании',
-        'date' => '07.02.2021',
-        'category' => 3,
-        'isDone' => false
-    ],
-    [
-        'id' => 2,
-        'name' => 'Выполнить тестовое задание',
-        'date' => '15.01.2021',
-        'category' => 3,
-        'isDone' => false
-    ],
-    [
-        'id' => 3,
-        'name' => 'Сделать задание первого раздела',
-        'date' => '12.02.2021',
-        'category' => 2,
-        'isDone' => true
-    ],
-    [
-        'id' => 4,
-        'name' => 'Встреча с другом',
-        'date' => '14.01.2021',
-        'category' => 1,
-        'isDone' => false
-    ],
-    [
-        'id' => 5,
-        'name' => 'Купить корм для кота',
-        'date' => null,
-        'category' => 4,
-        'isDone' => false
-    ],
-    [
-        'id' => 6,
-        'name' => 'Заказать пиццу',
-        'date' => '24.01.2021',
-        'category' => 4,
-        'isDone' => false
-    ],
-];
+$arrayTasks = mysqli_fetch_all($resultTasks, MYSQLI_ASSOC);
 
 function getFilterArray(array $arrayToFilter) {
 
@@ -100,7 +42,7 @@ function getTasksCount(array $projectList, array $tasksList, $projectName) {
 
     foreach ($tasksList as $taskKey => $task) {
 
-        if ($idNameProjects[$task['category']] === $projectName) {
+        if ($idNameProjects[$task['project_id']] === $projectName) {
             $taskCounter++;
         }
     }
@@ -119,7 +61,7 @@ function isTaskImportant($date) {
 function getUpdatedArray(array $projectList, array $tasksList) {
 
     foreach ($tasksList as $taskKey => $currentTask) {
-        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['date']);
+        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['due_date']);
     }
 
     foreach ($projectList as $projectKey => $currentProject) {

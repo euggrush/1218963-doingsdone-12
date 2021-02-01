@@ -49,19 +49,19 @@
     <table class="tasks">
         <?php foreach ($arrayTasks as $task):
 
-                        if ($show_complete_tasks === 0 && $task['isDone']) {
+                        if ($show_complete_tasks === 0 && $task['status']) {
                             continue;
                         }?>
 
-        <tr class="tasks__item task <?= $task['isImportant'] === true ? "task--important" : ""; ?> <?= $task['isDone'] ?  "task--completed" : "" ?>">
+        <tr class="tasks__item task <?= $task['isImportant'] === true ? "task--important" : ""; ?> <?= $task['status'] ?  "task--completed" : "" ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($task['isDone']):?> checked
+                    <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($task['status']):?> checked
                         <?php endif?>>
                     <span class="checkbox__text"><?= $task['name']; ?></span>
                 </label>
             </td>
-            <td class="task__date"><?= $task['date']; ?></td>
+            <td class="task__date"><?= $task['due_date']; ?></td>
             <td class="task__controls"></td>
         </tr>
 
