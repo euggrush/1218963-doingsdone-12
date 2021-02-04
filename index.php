@@ -6,63 +6,32 @@ require('helpers.php');
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$arrayProjects = [
-    ['id' => 1,
-    'name' => "Входящие"],
-    ['id' => 2,
-    'name' => "Учеба"],
-    ['id' => 3,
-    'name' => "Работа"],
-    ['id' => 4,
-    'name' => "Домашние дела"],
-    ['id' => 5,
-    'name' => "Авто"]
-];
+function getProjectSqlQuery() {
+    return "SELECT id, name FROM project";
+}
 
-$arrayTasks = [
-    [
-        'id' => 1,
-        'name' => 'Собеседование в IT компании',
-        'date' => '07.02.2021',
-        'category' => 3,
-        'isDone' => false
-    ],
-    [
-        'id' => 2,
-        'name' => 'Выполнить тестовое задание',
-        'date' => '15.01.2021',
-        'category' => 3,
-        'isDone' => false
-    ],
-    [
-        'id' => 3,
-        'name' => 'Сделать задание первого раздела',
-        'date' => '12.02.2021',
-        'category' => 2,
-        'isDone' => true
-    ],
-    [
-        'id' => 4,
-        'name' => 'Встреча с другом',
-        'date' => '14.01.2021',
-        'category' => 1,
-        'isDone' => false
-    ],
-    [
-        'id' => 5,
-        'name' => 'Купить корм для кота',
-        'date' => null,
-        'category' => 4,
-        'isDone' => false
-    ],
-    [
-        'id' => 6,
-        'name' => 'Заказать пиццу',
-        'date' => '24.01.2021',
-        'category' => 4,
-        'isDone' => false
-    ],
-];
+function getTaskSqlQuery() {
+    return "SELECT id, project_id, isDone, name, due_date FROM task";
+}
+
+function getSqlData() {
+    $connect = mysqli_connect("localhost", "root", "root","doingsdone_db");
+
+    $resultProjects = mysqli_query($connect, getProjectSqlQuery());
+    $resultTasks = mysqli_query($connect, getTaskSqlQuery());
+
+    $projects = mysqli_fetch_all($resultProjects, MYSQLI_ASSOC);
+    $tasks = mysqli_fetch_all($resultTasks, MYSQLI_ASSOC);
+
+    mysqli_close($connect);
+
+    return [
+        'projects' => $projects,
+        'tasks' => $tasks
+    ];
+}
+
+$data = getSqlData();
 
 function getFilterArray(array $arrayToFilter) {
 
@@ -90,7 +59,7 @@ function getTasksCount(array $projectList, array $tasksList, $projectName) {
 
     foreach ($tasksList as $taskKey => $task) {
 
-        if ($idNameProjects[$task['category']] === $projectName) {
+        if ($idNameProjects[$task['project_id']] === $projectName) {
             $taskCounter++;
         }
     }
@@ -109,7 +78,7 @@ function isTaskImportant($date) {
 function getUpdatedArray(array $projectList, array $tasksList) {
 
     foreach ($tasksList as $taskKey => $currentTask) {
-        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['date']);
+        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['due_date']);
     }
 
     foreach ($projectList as $projectKey => $currentProject) {
@@ -119,15 +88,15 @@ function getUpdatedArray(array $projectList, array $tasksList) {
     return [$projectList, $tasksList];
 }
 
-list($arrayProjects, $arrayTasks) = getUpdatedArray($arrayProjects, $arrayTasks);
-getUpdatedArray($arrayProjects, $arrayTasks);
-getFilterArray($arrayProjects);
-getFilterArray($arrayTasks);
+list($data['projects'], $data['tasks']) = getUpdatedArray($data['projects'], $data['tasks']);
+getUpdatedArray($data['projects'], $data['tasks']);
+getFilterArray($data['projects']);
+getFilterArray($data['tasks']);
 
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => $arrayProjects,
-    "arrayTasks" => $arrayTasks,
+    "arrayProjects" => $data['projects'],
+    "arrayTasks" => $data['tasks'],
     "show_complete_tasks" => $show_complete_tasks
 ]);
 

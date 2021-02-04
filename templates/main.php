@@ -53,7 +53,7 @@
                             continue;
                         }?>
 
-        <tr class="tasks__item task <?= $task['isImportant'] === true ? "task--important" : ""; ?> <?= $task['isDone'] ?  "task--completed" : "" ?>">
+        <tr class="tasks__item task <?= $task['isImportant'] ? "task--important" : ""; ?> <?= $task['isDone'] ?  "task--completed" : "" ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($task['isDone']):?> checked
@@ -61,7 +61,7 @@
                     <span class="checkbox__text"><?= $task['name']; ?></span>
                 </label>
             </td>
-            <td class="task__date"><?= $task['date']; ?></td>
+            <td class="task__date"><?= $task['due_date']; ?></td>
             <td class="task__controls"></td>
         </tr>
 
