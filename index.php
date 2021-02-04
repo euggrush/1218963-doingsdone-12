@@ -6,32 +6,32 @@ require('helpers.php');
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-function getData() {
+function getProjectSqlQuery() {
+    return "SELECT id, name FROM project";
+}
+
+function getTaskSqlQuery() {
+    return "SELECT id, project_id, isDone, name, due_date FROM task";
+}
+
+function getSqlData() {
     $connect = mysqli_connect("localhost", "root", "root","doingsdone_db");
 
-    $sqlProjects = "SELECT id, name FROM project";
-    $sqlTasks = "SELECT id, project_id, isDone, name, due_date FROM task";
-
-    $resultProjects = mysqli_query($connect, $sqlProjects);
-    $resultTasks = mysqli_query($connect, $sqlTasks);
+    $resultProjects = mysqli_query($connect, getProjectSqlQuery());
+    $resultTasks = mysqli_query($connect, getTaskSqlQuery());
 
     $projects = mysqli_fetch_all($resultProjects, MYSQLI_ASSOC);
     $tasks = mysqli_fetch_all($resultTasks, MYSQLI_ASSOC);
 
-    $arrayData = [
+    mysqli_close($connect);
+
+    return [
         'projects' => $projects,
         'tasks' => $tasks
     ];
-
-    mysqli_close($connect);
-
-    return $arrayData;
 }
 
-$data = getData();
-
-$arrayProjects = $data['projects'];
-$arrayTasks = $data['tasks'];
+$data = getSqlData();
 
 function getFilterArray(array $arrayToFilter) {
 
@@ -88,15 +88,15 @@ function getUpdatedArray(array $projectList, array $tasksList) {
     return [$projectList, $tasksList];
 }
 
-list($arrayProjects, $arrayTasks) = getUpdatedArray($arrayProjects, $arrayTasks);
-getUpdatedArray($arrayProjects, $arrayTasks);
-getFilterArray($arrayProjects);
-getFilterArray($arrayTasks);
+list($data['projects'], $data['tasks']) = getUpdatedArray($data['projects'], $data['tasks']);
+getUpdatedArray($data['projects'], $data['tasks']);
+getFilterArray($data['projects']);
+getFilterArray($data['tasks']);
 
 $mainContent = include_template('main.php',
 [
-    "arrayProjects" => $arrayProjects,
-    "arrayTasks" => $arrayTasks,
+    "arrayProjects" => $data['projects'],
+    "arrayTasks" => $data['tasks'],
     "show_complete_tasks" => $show_complete_tasks
 ]);
 
