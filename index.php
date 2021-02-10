@@ -3,7 +3,7 @@ ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 require('helpers.php');
-// показывать или нет выполненные задачи
+
 $show_complete_tasks = rand(0, 1);
 
 function getProjectSqlQuery() {
@@ -75,6 +75,19 @@ function isTaskImportant($date) {
     return true;
 }
 
+function getTasksByProjects($array) {
+    $tasksByProjects = [];
+    foreach ($array as $key => $value) {
+
+        if (isset($_GET[$value['project_id']])) {
+            array_push($tasksByProjects, $value);
+          } elseif (empty($_GET)) {
+            $tasksByProjects = $array;
+          }
+    }
+    return $tasksByProjects;
+}
+
 function getUpdatedArray(array $projectList, array $tasksList) {
 
     foreach ($tasksList as $taskKey => $currentTask) {
@@ -84,6 +97,8 @@ function getUpdatedArray(array $projectList, array $tasksList) {
     foreach ($projectList as $projectKey => $currentProject) {
         $projectList[$projectKey]['count'] = getTasksCount($projectList, $tasksList, $currentProject['name']);
     }
+
+    $tasksList = getTasksByProjects($tasksList);
 
     return [$projectList, $tasksList];
 }
