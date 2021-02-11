@@ -109,6 +109,10 @@ function getUpdatedArray(array $projectList, array $tasksList) {
 
     $tasksList = getTasksByProjects($tasksList);
 
+    if (count($tasksList) === 0) {
+        var_dump(http_response_code(404));
+      }
+
     return [$projectList, $tasksList];
 }
 
