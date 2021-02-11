@@ -88,6 +88,14 @@ function getTasksByProjects($array) {
     return $tasksByProjects;
 }
 
+function isProjectActive($project) {
+
+    if (isset($_GET[$project])) {
+       return true;
+    }
+    return false;
+}
+
 function getUpdatedArray(array $projectList, array $tasksList) {
 
     foreach ($tasksList as $taskKey => $currentTask) {
@@ -96,6 +104,7 @@ function getUpdatedArray(array $projectList, array $tasksList) {
 
     foreach ($projectList as $projectKey => $currentProject) {
         $projectList[$projectKey]['count'] = getTasksCount($projectList, $tasksList, $currentProject['name']);
+        $projectList[$projectKey]['activeProject'] = isProjectActive($currentProject['id']);
     }
 
     $tasksList = getTasksByProjects($tasksList);

@@ -5,7 +5,7 @@
         <ul class="main-navigation__list">
             <?php foreach ($arrayProjects as $project):?>
 
-            <li class="main-navigation__list-item">
+            <li class="main-navigation__list-item <?= $project['activeProject'] ? "main-navigation__list-item--active" : ""; ?>">
                 <a class="main-navigation__list-item-link" href="index.php?<?= $project['id']; ?>"><?= $project['name']; ?></a>
                 <span class="main-navigation__list-item-count">
                     <?= $project['count']; ?>
