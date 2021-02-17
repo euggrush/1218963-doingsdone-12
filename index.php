@@ -75,31 +75,30 @@ function isTaskImportant($date) {
     return true;
 }
 
-function getTasksByProjects($array) {
-    $tasksByProjects = [];
-    foreach ($array as $key => $value) {
-
-        if (isset($_GET[$value['project_id']])) {
-            array_push($tasksByProjects, $value);
-          } elseif (empty($_GET)) {
-            $tasksByProjects = $array;
-          }
-    }
-    return $tasksByProjects;
-}
-
 function isProjectActive($project) {
 
-    if (isset($_GET[$project])) {
-       return true;
-    }
+    if (empty($_GET)) {
+       return false;
+    } elseif ($_GET['project_id'] === $project) {
+        return true;
+     }
     return false;
 }
 
 function getUpdatedArray(array $projectList, array $tasksList) {
+    $tasksByProjects = [];
 
     foreach ($tasksList as $taskKey => $currentTask) {
-        $tasksList[$taskKey]['isImportant'] = isTaskImportant($currentTask['due_date']);
+
+        if (empty($_GET)) {
+            $tasksByProjects = $tasksList;
+         } elseif (intval($currentTask['project_id']) === intval($_GET['project_id'])) {
+            array_push($tasksByProjects, $currentTask);
+        }
+    }
+
+    foreach ($tasksByProjects as $tasksByProjectsKey => $tasksByProjectsValue) {
+        $tasksByProjects[$tasksByProjectsKey]['isImportant'] = isTaskImportant($tasksByProjectsValue['due_date']);
     }
 
     foreach ($projectList as $projectKey => $currentProject) {
@@ -107,14 +106,23 @@ function getUpdatedArray(array $projectList, array $tasksList) {
         $projectList[$projectKey]['activeProject'] = isProjectActive($currentProject['id']);
     }
 
-    $tasksList = getTasksByProjects($tasksList);
-
-    if (count($tasksList) === 0) {
-        var_dump(http_response_code(404));
-      }
-
-    return [$projectList, $tasksList];
+    return [$projectList, $tasksByProjects];
 }
+
+function getCurrentProject(array $projects, $projectId) {
+
+    $currentProject = array_filter($projects, function ($item) use ($projectId) {
+        return in_array($item['id'], $projectId);
+     });
+
+     if (!isset($currentProject)) {
+        var_dump(http_response_code(404));
+     }
+
+     return $currentProject;
+}
+
+$currentProjectArray = getCurrentProject($data['projects'], $_GET);
 
 list($data['projects'], $data['tasks']) = getUpdatedArray($data['projects'], $data['tasks']);
 getUpdatedArray($data['projects'], $data['tasks']);
@@ -125,7 +133,8 @@ $mainContent = include_template('main.php',
 [
     "arrayProjects" => $data['projects'],
     "arrayTasks" => $data['tasks'],
-    "show_complete_tasks" => $show_complete_tasks
+    "show_complete_tasks" => $show_complete_tasks,
+    "currentProjectArray" => $currentProjectArray
 ]);
 
 $layoutContent = include_template('layout.php',
