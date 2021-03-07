@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1);
 require('helpers.php');
 
 $show_complete_tasks = rand(0, 1);
+$errorMsg = true;
 
 function getProjectSqlQuery() {
     return "SELECT id, name FROM project";
@@ -110,19 +111,32 @@ function getUpdatedArray(array $projectList, array $tasksList) {
 }
 
 function getCurrentProject(array $projects, $projectId) {
+    $currentProject = [];
+    global $errorMsg;
 
-    $currentProject = array_filter($projects, function ($item) use ($projectId) {
-        return in_array($item['id'], $projectId);
-     });
-
-     if (!isset($currentProject)) {
-        var_dump(http_response_code(404));
+    if (empty($projectId)) {
+        return $currentProject = [];
+     } elseif (intval($projectId) < 0 || !intval($projectId)) {
+        $errorMsg = false;
      }
 
+    foreach ($projects as $projectsKey => $project) {
+
+        if ($project['id'] === $projectId) {
+            array_push($currentProject, $project);
+        }
+    }
      return $currentProject;
 }
 
-$currentProjectArray = getCurrentProject($data['projects'], $_GET);
+function getProjectId($id) {
+    if (!isset($id['project_id'])) {
+        $id['project_id'] = 0;
+    }
+    return $id['project_id'];
+}
+
+$currentProjectArray = getCurrentProject($data['projects'], getProjectId($_GET));
 
 list($data['projects'], $data['tasks']) = getUpdatedArray($data['projects'], $data['tasks']);
 getUpdatedArray($data['projects'], $data['tasks']);
@@ -134,7 +148,8 @@ $mainContent = include_template('main.php',
     "arrayProjects" => $data['projects'],
     "arrayTasks" => $data['tasks'],
     "show_complete_tasks" => $show_complete_tasks,
-    "currentProjectArray" => $currentProjectArray
+    "currentProjectArray" => $currentProjectArray,
+    "errorMsg" => $errorMsg
 ]);
 
 $layoutContent = include_template('layout.php',
