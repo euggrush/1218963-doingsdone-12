@@ -45,10 +45,6 @@
         </label>
     </div>
 
-    <div class="error-block <?=$errorMsg ? "visually-hidden" : "" ?>">
-                Ошибка "404", задачи не существует
-    </div>
-
     <table class="tasks">
         <?php foreach ($arrayTasks as $task):
 
